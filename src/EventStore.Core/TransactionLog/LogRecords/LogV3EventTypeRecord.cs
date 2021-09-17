@@ -5,7 +5,7 @@ using EventStore.LogV3;
 
 namespace EventStore.Core.TransactionLog.LogRecords {
 	public class LogV3EventTypeRecord : LogV3Record<StringPayloadRecord<Raw.EventTypeHeader>>, IPrepareLogRecord<UInt32> {
-		public UInt32 EventStreamId => LogV3SystemStreams.EventTypesCreatedStreamNumber;
+		public UInt32 EventStreamId => LogV3SystemStreams.EventsDefinedStreamNumber;
 		public PrepareFlags Flags => PrepareFlags.SingleWrite | PrepareFlags.IsCommitted | PrepareFlags.IsJson;
 		public long TransactionPosition => LogPosition;
 		public int TransactionOffset => 0;

@@ -41,7 +41,7 @@ namespace EventStore.Core.Tests {
 		public static List<CommitEventRecord> EventRecords(this IndexReadAllResult result) {
 			return result.Records
 				.Where(r => r.Event.EventStreamId != SystemStreams.StreamsCreatedStream
-				            && r.Event.EventStreamId != SystemStreams.EventTypesCreatedStream).ToList();
+				            && r.Event.EventStreamId != SystemStreams.EventsDefinedStream).ToList();
 		}
 	}
 }

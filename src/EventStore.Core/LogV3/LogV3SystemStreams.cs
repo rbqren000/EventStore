@@ -102,7 +102,7 @@ namespace EventStore.Core.LogV3 {
 		private const StreamId SettingsStreamNumber = 8;
 		
 		// virtual stream so that we can index EventTypeRecords for looking up event type names
-		public const StreamId EventTypesCreatedStreamNumber = 10;
+		public const StreamId EventsDefinedStreamNumber = 10;
 
 		public StreamId AllStream => AllStreamNumber;
 		public StreamId SettingsStream => SettingsStreamNumber;
@@ -126,7 +126,7 @@ namespace EventStore.Core.LogV3 {
 
 			name = streamId switch {
 				AllStreamNumber => SystemStreams.AllStream,
-				EventTypesCreatedStreamNumber => SystemStreams.EventTypesCreatedStream,
+				EventsDefinedStreamNumber => SystemStreams.EventsDefinedStream,
 				SettingsStreamNumber => SystemStreams.SettingsStream,
 				StreamsCreatedStreamNumber => SystemStreams.StreamsCreatedStream,
 				_ => null,
@@ -140,8 +140,8 @@ namespace EventStore.Core.LogV3 {
 				case SystemStreams.AllStream:
 					streamId = AllStreamNumber;
 					return true;
-				case SystemStreams.EventTypesCreatedStream:
-					streamId = EventTypesCreatedStreamNumber;
+				case SystemStreams.EventsDefinedStream:
+					streamId = EventsDefinedStreamNumber;
 					return true;
 				case SystemStreams.StreamsCreatedStream:
 					streamId = StreamsCreatedStreamNumber;

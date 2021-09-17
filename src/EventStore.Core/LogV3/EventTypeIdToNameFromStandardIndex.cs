@@ -14,7 +14,7 @@ namespace EventStore.Core.LogV3 {
 
 		public bool TryGetName(uint eventTypeId, out string name) {
 			var record = _indexReader.ReadPrepare(
-				streamId: LogV3SystemStreams.EventTypesCreatedStreamNumber,
+				streamId: LogV3SystemStreams.EventsDefinedStreamNumber,
 				eventNumber: EventTypeIdConverter.ToEventNumber(eventTypeId));
 
 			if (record is null) {
@@ -30,7 +30,7 @@ namespace EventStore.Core.LogV3 {
 		}
 
 		public bool TryGetLastValue(out uint lastValue) {
-			var lastEventNumber = _indexReader.GetStreamLastEventNumber(LogV3SystemStreams.EventTypesCreatedStreamNumber);
+			var lastEventNumber = _indexReader.GetStreamLastEventNumber(LogV3SystemStreams.EventsDefinedStreamNumber);
 			var success = ExpectedVersion.NoStream < lastEventNumber && lastEventNumber != EventNumber.DeletedStream;
 			lastValue = EventTypeIdConverter.ToEventTypeId(lastEventNumber);
 			return success;
