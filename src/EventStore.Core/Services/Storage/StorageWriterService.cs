@@ -95,11 +95,11 @@ namespace EventStore.Core.Services.Storage {
 			IRecordFactory<TStreamId> recordFactory,
 			INameIndex<TStreamId> streamNameIndex,
 			INameIndex<TStreamId> eventTypeIndex,
+			TStreamId emptyEventTypeId,
 			ISystemStreamLookup<TStreamId> systemStreams,
 			IEpochManager epochManager,
 			QueueStatsManager queueStatsManager,
-			IPartitionManager partitionManager,
-			TStreamId emptyEventTypeId) {
+			IPartitionManager partitionManager) {
 			Ensure.NotNull(bus, "bus");
 			Ensure.NotNull(subscribeToBus, "subscribeToBus");
 			Ensure.NotNull(db, "db");

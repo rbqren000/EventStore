@@ -15,7 +15,7 @@ namespace EventStore.Core.TransactionLog.LogRecords {
 		public long ExpectedVersion => StreamIdConverter.ToEventNumber(Record.SubHeader.ReferenceNumber) - 1;
 		public Guid EventId => Record.Header.RecordId;
 		public Guid CorrelationId { get; } = Guid.NewGuid();
-		public uint EventType => LogV3SystemEventTypes.StreamCreated;
+		public uint EventType => LogV3SystemEventTypes.StreamCreatedNumber;
 		// so we can see the stream name in the webui if we want
 		public ReadOnlyMemory<byte> Data => Record.Payload;
 		public ReadOnlyMemory<byte> Metadata => ReadOnlyMemory<byte>.Empty;

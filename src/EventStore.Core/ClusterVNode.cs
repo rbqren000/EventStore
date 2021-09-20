@@ -695,9 +695,10 @@ namespace EventStore.Core {
 				logFormat.RecordFactory,
 				logFormat.StreamNameIndex,
 				logFormat.EventTypeIndex,
+				logFormat.EmptyEventTypeId,
 				logFormat.SystemStreams,
 				epochManager, _queueStatsManager, () => readIndex.LastIndexedPosition,
-				partitionManager, logFormat.EmptyEventTypeId); // subscribes internally
+				partitionManager); // subscribes internally
 			AddTasks(storageWriter.Tasks);
 
 			monitoringRequestBus.Subscribe<MonitoringMessage.InternalStatsRequest>(storageWriter);

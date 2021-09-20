@@ -321,7 +321,6 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 		private static bool IsCommitAlike(ILogRecord rec) {
 			return rec.RecordType == LogRecordType.Commit
 			       || ((rec.RecordType == LogRecordType.Prepare
-			            || rec.RecordType == LogRecordType.Stream
 			            || rec.RecordType == LogRecordType.Stream) &&
 			           ((IPrepareLogRecord)rec).Flags.HasAnyOf(PrepareFlags.IsCommitted));
 		}

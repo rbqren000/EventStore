@@ -5,14 +5,14 @@ using EventStore.LogV3;
 namespace EventStore.Core.TransactionLog.LogRecords {
 	public class LogV3EventTypeRecord : LogV3Record<StringPayloadRecord<Raw.EventTypeHeader>>, IEquatable<LogV3EventTypeRecord>, IPrepareLogRecord<uint> {
 
-		public uint EventStreamId => LogV3SystemStreams.EventsDefinedStreamNumber;
+		public uint EventStreamId => LogV3SystemStreams.EventTypesStreamNumber;
 		public PrepareFlags Flags => PrepareFlags.SingleWrite | PrepareFlags.IsCommitted | PrepareFlags.IsJson;
 		public long TransactionPosition => LogPosition;
 		public int TransactionOffset => 0;
 		public long ExpectedVersion => EventTypeIdConverter.ToEventNumber(Record.SubHeader.ReferenceNumber) - 1;
 		public Guid EventId => Record.Header.RecordId;
 		public Guid CorrelationId { get; } = Guid.NewGuid();
-		public uint EventType => LogV3SystemEventTypes.EventTypeDefined;
+		public uint EventType => LogV3SystemEventTypes.EventTypeDefinedNumber;
 		// so we can see the event type in the webui if we want
 		public ReadOnlyMemory<byte> Data => Record.Payload;
 		public ReadOnlyMemory<byte> Metadata => ReadOnlyMemory<byte>.Empty;

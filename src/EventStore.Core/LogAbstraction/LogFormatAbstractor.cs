@@ -201,7 +201,7 @@ namespace EventStore.Core.LogAbstraction {
 			var persistence = new FASTERNameIndexPersistence(
 				indexName: "EventTypeIndexPersistence",
 				logDir: $"{options.IndexDirectory}/event-type-index",
-				firstValue: LogV3SystemEventTypes.FirstRealEventType,
+				firstValue: LogV3SystemEventTypes.FirstRealEventTypeNumber,
 				valueInterval: LogV3SystemEventTypes.EventTypeInterval,
 				initialReaderCount: options.InitialReaderCount,
 				maxReaderCount: options.MaxReaderCount,
@@ -213,7 +213,7 @@ namespace EventStore.Core.LogAbstraction {
 		static NameIndex GenEventTypeIndex(INameIndexPersistence<LogV3StreamId> persistence) =>
 			new NameIndex(
 				indexName: "EventTypeIndex",
-				firstValue: LogV3SystemEventTypes.FirstRealEventType,
+				firstValue: LogV3SystemEventTypes.FirstRealEventTypeNumber,
 				valueInterval: LogV3SystemEventTypes.EventTypeInterval,
 				existenceFilter: new NoNameExistenceFilter(),
 				persistence: persistence,
