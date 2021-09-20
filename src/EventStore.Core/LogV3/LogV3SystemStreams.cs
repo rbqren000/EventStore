@@ -4,6 +4,7 @@ using StreamId = System.UInt32;
 
 
 namespace EventStore.Core.LogV3 {
+
 	public class LogV3SystemStreams : ISystemStreamLookup<StreamId> {
 		// Virtual streams are streams that exist without requiring a stream record.
 		// Essentially, they are hard coded.
@@ -30,7 +31,7 @@ namespace EventStore.Core.LogV3 {
 
 		// virtual stream so that we can index StreamRecords for looking up stream names
 		public const StreamId StreamsCreatedStreamNumber = 6;
-		
+
 		// virtual stream for storing system settings
 		private const StreamId SettingsStreamNumber = 8;
 		

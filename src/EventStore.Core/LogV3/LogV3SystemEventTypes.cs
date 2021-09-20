@@ -1,35 +1,35 @@
-﻿using System;
-using EventStore.Core.Services;
+﻿using EventStore.Core.Services;
+using EventTypeId = System.UInt32;
 
 namespace EventStore.Core.LogV3
 {
 	public class LogV3SystemEventTypes {
 
-		public const UInt32 FirstRealEventType = 1024;
-		public const UInt32 EventTypeInterval = 1;
+		public const EventTypeId FirstRealEventType = 1024;
+		public const EventTypeId EventTypeInterval = 1;
 
-		public const UInt32 EmptyEventType = 0;
-		public const UInt32 StreamDeleted = 1;
-		public const UInt32 StatsCollection = 2;
-		public const UInt32 LinkTo = 3;
-		public const UInt32 StreamReference = 4;
-		public const UInt32 StreamMetadata = 5;
-		public const UInt32 Settings = 6;
-		public const UInt32 StreamCreated = 7;
+		public const EventTypeId EmptyEventType = 0;
+		public const EventTypeId StreamDeleted = 1;
+		public const EventTypeId StatsCollection = 2;
+		public const EventTypeId LinkTo = 3;
+		public const EventTypeId StreamReference = 4;
+		public const EventTypeId StreamMetadata = 5;
+		public const EventTypeId Settings = 6;
+		public const EventTypeId StreamCreated = 7;
 
-		public const UInt32 V2__StreamCreated_InIndex = 8;
-		public const UInt32 V1__StreamCreated__ = 9;
-		public const UInt32 V1__StreamCreatedImplicit__ = 10;
+		public const EventTypeId V2__StreamCreated_InIndex = 8;
+		public const EventTypeId V1__StreamCreated__ = 9;
+		public const EventTypeId V1__StreamCreatedImplicit__ = 10;
 
-		public const UInt32 ScavengeStarted = 11;
-		public const UInt32 ScavengeCompleted = 12;
-		public const UInt32 ScavengeChunksCompleted = 13;
-		public const UInt32 ScavengeMergeCompleted = 14;
-		public const UInt32 ScavengeIndexCompleted = 15;
+		public const EventTypeId ScavengeStarted = 11;
+		public const EventTypeId ScavengeCompleted = 12;
+		public const EventTypeId ScavengeChunksCompleted = 13;
+		public const EventTypeId ScavengeMergeCompleted = 14;
+		public const EventTypeId ScavengeIndexCompleted = 15;
 
-		public const UInt32 EventDefined = 16;
+		public const EventTypeId EventDefined = 16;
 		
-		public static bool TryGetSystemEventTypeId(string type, out UInt32 eventTypeId) {
+		public static bool TryGetSystemEventTypeId(string type, out EventTypeId eventTypeId) {
 			switch (type) {
 				case SystemEventTypes.EmptyEventType:
 					eventTypeId = EmptyEventType;
@@ -48,12 +48,12 @@ namespace EventStore.Core.LogV3
 					return true;
 //qq implement other types ??
 				default:
-					eventTypeId = 0;
+					eventTypeId = EmptyEventType;
 					return false;
 			}
 		}
 		
-		public static bool TryGetVirtualEventType(UInt32 eventTypeId, out string name) {
+		public static bool TryGetVirtualEventType(EventTypeId eventTypeId, out string name) {
 			if (!IsVirtualEventType(eventTypeId)) {
 				name = null;
 				return false;
@@ -70,6 +70,6 @@ namespace EventStore.Core.LogV3
 			return name != null;
 		}
 		
-		private static bool IsVirtualEventType(UInt32 eventTypeId) => eventTypeId < FirstRealEventType;
+		private static bool IsVirtualEventType(EventTypeId eventTypeId) => eventTypeId < FirstRealEventType;
 	}
 }
