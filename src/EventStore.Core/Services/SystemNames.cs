@@ -81,6 +81,7 @@ namespace EventStore.Core.Services {
 		public const string ScavengeMergeCompleted = "$scavengeMergeCompleted";
 		public const string ScavengeIndexCompleted = "$scavengeIndexCompleted";
 		public const string EmptyEventType = "";
+		public const string EventDefined = "$event-defined";
 
 		public static string StreamReferenceEventToStreamId(string eventType, ReadOnlyMemory<byte> data) {
 			string streamId = null;

@@ -204,7 +204,7 @@ namespace EventStore.LogV3.Tests {
 			Assert.Equal(_long3, record.WriteId.StreamNumber);
 			Assert.Equal(_long4, record.WriteId.StartingEventNumber);
 			Assert.Equal<Guid>(_guid2, record.Event.SystemMetadata.EventId);
-			Assert.Equal(_uint1, record.Event.SystemMetadata.EventType);
+			Assert.Equal(_uint1, record.Event.Header.EventTypeNumber);
 			Assert.Equal(MemoryMarshal.ToEnumerable(_bytes3), MemoryMarshal.ToEnumerable(record.Event.Data));
 			Assert.Equal(MemoryMarshal.ToEnumerable(_bytes4), MemoryMarshal.ToEnumerable(record.Event.Metadata));
 			Assert.Equal(_prepareflags, record.Event.Header.Flags);

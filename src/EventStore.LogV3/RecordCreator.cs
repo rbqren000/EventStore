@@ -256,7 +256,6 @@ namespace EventStore.LogV3 {
 
 			var eventSystemMetadata = new EventSystemMetadata {
 				EventId = eventId,
-				EventType = eventTypeNumber,
 			};
 
 			var writeSystemMetadataSize = writeSystemMetadata.CalculateSize();

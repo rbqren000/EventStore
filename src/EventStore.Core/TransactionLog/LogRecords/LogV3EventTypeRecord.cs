@@ -4,7 +4,7 @@ using EventStore.LogV3;
 
 
 namespace EventStore.Core.TransactionLog.LogRecords {
-	public class LogV3EventTypeRecord : LogV3Record<StringPayloadRecord<Raw.EventTypeHeader>>, IPrepareLogRecord<UInt32> {
+	public class LogV3EventTypeRecord : LogV3Record<StringPayloadRecord<Raw.EventTypeHeader>>, IEquatable<LogV3EventTypeRecord>, IPrepareLogRecord<UInt32> {
 		public UInt32 EventStreamId => LogV3SystemStreams.EventsDefinedStreamNumber;
 		public PrepareFlags Flags => PrepareFlags.SingleWrite | PrepareFlags.IsCommitted | PrepareFlags.IsJson;
 		public long TransactionPosition => LogPosition;
@@ -12,7 +12,7 @@ namespace EventStore.Core.TransactionLog.LogRecords {
 		public long ExpectedVersion => EventTypeIdConverter.ToEventNumber(Record.SubHeader.ReferenceNumber) - 1;
 		public Guid EventId => Record.Header.RecordId;
 		public Guid CorrelationId { get; } = Guid.NewGuid();
-		public uint EventType => Record.SubHeader.ReferenceNumber;
+		public uint EventType => LogV3SystemEventTypes.EventDefined;
 		// so we can see the event type in the webui if we want
 		public ReadOnlyMemory<byte> Data => Record.Payload;
 		public ReadOnlyMemory<byte> Metadata => ReadOnlyMemory<byte>.Empty;
@@ -53,8 +53,19 @@ namespace EventStore.Core.TransactionLog.LogRecords {
 				eventTypeNumber: Record.SubHeader.ReferenceNumber,
 				eventType: Record.StringPayload,
 				parentEventTypeId: Record.SubHeader.ParentEventTypeId,
-				version: Record.Header.Version,
+				version: Version,
 				partitionId: Record.SubHeader.PartitionId);
+		}
+		
+		public bool Equals(LogV3EventTypeRecord other) {
+			if (other is null)
+				return false;
+			if (ReferenceEquals(this, other))
+				return true;
+			return
+				other.EventTypeName == EventTypeName &&
+				other.EventTypeNumber == EventTypeNumber &&
+				other.Record.Bytes.Span.SequenceEqual(Record.Bytes.Span);
 		}
 	}
 }
