@@ -34,19 +34,54 @@ namespace EventStore.Core.LogV3
 				case SystemEventTypes.EmptyEventType:
 					eventTypeId = EmptyEventType;
 					return true;
-				case SystemEventTypes.EventDefined:
-					eventTypeId = EventDefined;
-					return true;
-				case SystemEventTypes.StreamCreated:
-					eventTypeId = StreamCreated;
-					return true;
 				case SystemEventTypes.StreamDeleted:
 					eventTypeId = StreamDeleted;
+					return true;
+				case SystemEventTypes.StatsCollection:
+					eventTypeId = StatsCollection;
+					return true;
+				case SystemEventTypes.LinkTo:
+					eventTypeId = LinkTo;
+					return true;
+				case SystemEventTypes.StreamReference:
+					eventTypeId = StreamReference;
 					return true;
 				case SystemEventTypes.StreamMetadata:
 					eventTypeId = StreamMetadata;
 					return true;
-//qq implement other types ??
+				case SystemEventTypes.Settings:
+					eventTypeId = Settings;
+					return true;
+				case SystemEventTypes.StreamCreated:
+					eventTypeId = StreamCreated;
+					return true;
+				case SystemEventTypes.V2__StreamCreated_InIndex:
+					eventTypeId = V2__StreamCreated_InIndex;
+					return true;
+				case SystemEventTypes.V1__StreamCreated__:
+					eventTypeId = V1__StreamCreated__;
+					return true;
+				case SystemEventTypes.V1__StreamCreatedImplicit__:
+					eventTypeId = V1__StreamCreatedImplicit__;
+					return true;
+				case SystemEventTypes.ScavengeStarted:
+					eventTypeId = ScavengeStarted;
+					return true;
+				case SystemEventTypes.ScavengeCompleted:
+					eventTypeId = ScavengeCompleted;
+					return true;
+				case SystemEventTypes.ScavengeChunksCompleted:
+					eventTypeId = ScavengeChunksCompleted;
+					return true;
+				case SystemEventTypes.ScavengeMergeCompleted:
+					eventTypeId = ScavengeMergeCompleted;
+					return true;
+				case SystemEventTypes.ScavengeIndexCompleted:
+					eventTypeId = ScavengeIndexCompleted;
+					return true;
+				case SystemEventTypes.EventDefined:
+					eventTypeId = EventDefined;
+					return true;
 				default:
 					eventTypeId = EmptyEventType;
 					return false;
@@ -61,9 +96,22 @@ namespace EventStore.Core.LogV3
 
 			name = eventTypeId switch {
 				EmptyEventType => SystemEventTypes.EmptyEventType,
-				StreamMetadata => SystemEventTypes.StreamMetadata,
-				StreamCreated => SystemEventTypes.StreamCreated,
 				StreamDeleted => SystemEventTypes.StreamDeleted,
+				StatsCollection => SystemEventTypes.StatsCollection,
+				LinkTo => SystemEventTypes.LinkTo,
+				StreamReference => SystemEventTypes.StreamReference,
+				StreamMetadata => SystemEventTypes.StreamMetadata,
+				Settings => SystemEventTypes.Settings,
+				StreamCreated => SystemEventTypes.StreamCreated,
+				V2__StreamCreated_InIndex => SystemEventTypes.V2__StreamCreated_InIndex,
+				V1__StreamCreated__ => SystemEventTypes.V1__StreamCreated__,
+				V1__StreamCreatedImplicit__ => SystemEventTypes.V1__StreamCreatedImplicit__,
+				ScavengeStarted => SystemEventTypes.ScavengeStarted,
+				ScavengeCompleted => SystemEventTypes.ScavengeCompleted,
+				ScavengeChunksCompleted => SystemEventTypes.ScavengeChunksCompleted,
+				ScavengeMergeCompleted => SystemEventTypes.ScavengeMergeCompleted,
+				ScavengeIndexCompleted => SystemEventTypes.ScavengeIndexCompleted,
+				EventDefined => SystemEventTypes.EventDefined,
 				_ => null,
 			};
 
