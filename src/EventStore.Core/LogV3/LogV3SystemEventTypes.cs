@@ -27,7 +27,7 @@ namespace EventStore.Core.LogV3
 		public const EventTypeId ScavengeMergeCompleted = 14;
 		public const EventTypeId ScavengeIndexCompleted = 15;
 
-		public const EventTypeId EventDefined = 16;
+		public const EventTypeId EventTypeDefined = 16;
 		
 		public static bool TryGetSystemEventTypeId(string type, out EventTypeId eventTypeId) {
 			switch (type) {
@@ -79,8 +79,8 @@ namespace EventStore.Core.LogV3
 				case SystemEventTypes.ScavengeIndexCompleted:
 					eventTypeId = ScavengeIndexCompleted;
 					return true;
-				case SystemEventTypes.EventDefined:
-					eventTypeId = EventDefined;
+				case SystemEventTypes.EventTypeDefined:
+					eventTypeId = EventTypeDefined;
 					return true;
 				default:
 					eventTypeId = EmptyEventType;
@@ -111,7 +111,7 @@ namespace EventStore.Core.LogV3
 				ScavengeChunksCompleted => SystemEventTypes.ScavengeChunksCompleted,
 				ScavengeMergeCompleted => SystemEventTypes.ScavengeMergeCompleted,
 				ScavengeIndexCompleted => SystemEventTypes.ScavengeIndexCompleted,
-				EventDefined => SystemEventTypes.EventDefined,
+				EventTypeDefined => SystemEventTypes.EventTypeDefined,
 				_ => null,
 			};
 

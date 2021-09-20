@@ -88,7 +88,7 @@ namespace EventStore.Core.Tests.ClientAPI {
 				var appeared = new TaskCompletionSource<bool>();
 
 				using (await store.FilteredSubscribeToAllAsync(false, filter, (s, e) => {
-					if (e.OriginalStreamId == SystemStreams.EventsDefinedStream)
+					if (e.OriginalStreamId == SystemStreams.EventTypesStream)
 						return Task.CompletedTask;
 					
 					foundEvents.Add(e);

@@ -60,7 +60,7 @@ namespace EventStore.Core.LogV3 {
 
 			name = streamId switch {
 				AllStreamNumber => SystemStreams.AllStream,
-				EventsDefinedStreamNumber => SystemStreams.EventsDefinedStream,
+				EventsDefinedStreamNumber => SystemStreams.EventTypesStream,
 				SettingsStreamNumber => SystemStreams.SettingsStream,
 				StreamsCreatedStreamNumber => SystemStreams.StreamsCreatedStream,
 				_ => null,
@@ -74,7 +74,7 @@ namespace EventStore.Core.LogV3 {
 				case SystemStreams.AllStream:
 					streamId = AllStreamNumber;
 					return true;
-				case SystemStreams.EventsDefinedStream:
+				case SystemStreams.EventTypesStream:
 					streamId = EventsDefinedStreamNumber;
 					return true;
 				case SystemStreams.StreamsCreatedStream:
