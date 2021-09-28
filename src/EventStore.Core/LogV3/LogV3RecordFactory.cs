@@ -42,7 +42,7 @@ namespace EventStore.Core.LogV3 {
 			Guid parentEventTypeId,
 			string eventType,
 			uint eventTypeNumber,
-			byte version,
+			ushort eventTypeVersion,
 			long logPosition,
 			DateTime timeStamp) {
 
@@ -51,7 +51,7 @@ namespace EventStore.Core.LogV3 {
 				parentEventTypeId: parentEventTypeId,
 				eventType: eventType,
 				eventTypeNumber: eventTypeNumber,
-				version: version,
+				eventTypeVersion: eventTypeVersion,
 				logPosition: logPosition,
 				timeStamp: timeStamp,
 				partitionId: _rootPartitionId);

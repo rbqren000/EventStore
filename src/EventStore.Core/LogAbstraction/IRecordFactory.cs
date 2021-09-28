@@ -21,7 +21,7 @@ namespace EventStore.Core.LogAbstraction {
 			Guid parentEventTypeId,
 			string eventType,
 			TStreamId eventTypeNumber,
-			byte version,
+			ushort eventTypeVersion,
 			long logPosition,
 			DateTime timeStamp);
 

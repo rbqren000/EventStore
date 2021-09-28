@@ -11,6 +11,7 @@ namespace EventStore.Core.TransactionLog.LogRecords {
 		public int TransactionOffset => 0;
 		public long ExpectedVersion => EventTypeIdConverter.ToEventNumber(Record.SubHeader.ReferenceNumber) - 1;
 		public Guid EventId => Record.Header.RecordId;
+		public Guid ParentEventId => Record.SubHeader.ParentEventTypeId;
 		public Guid CorrelationId { get; } = Guid.NewGuid();
 		public uint EventType => LogV3SystemEventTypes.EventTypeDefinedNumber;
 		// so we can see the event type in the webui if we want
@@ -19,6 +20,7 @@ namespace EventStore.Core.TransactionLog.LogRecords {
 
 		public string EventTypeName => Record.StringPayload;
 		public uint EventTypeNumber => Record.SubHeader.ReferenceNumber;
+		public ushort EventTypeVersion => Record.SubHeader.Version;
 
 		public LogV3EventTypeRecord(
 			Guid eventTypeId,
@@ -27,7 +29,7 @@ namespace EventStore.Core.TransactionLog.LogRecords {
 			DateTime timeStamp,
 			string eventType,
 			uint eventTypeNumber,
-			byte version,
+			ushort eventTypeVersion,
 			Guid partitionId) : base() {
 
 			Record = RecordCreator.CreateEventTypeRecord(
@@ -37,7 +39,7 @@ namespace EventStore.Core.TransactionLog.LogRecords {
 				logPosition: logPosition,
 				name: eventType,
 				eventTypeNumber: eventTypeNumber,
-				version: version,
+				eventTypeVersion: eventTypeVersion,
 				partitionId: partitionId);
 		}
 
@@ -53,7 +55,7 @@ namespace EventStore.Core.TransactionLog.LogRecords {
 				eventTypeNumber: Record.SubHeader.ReferenceNumber,
 				eventType: Record.StringPayload,
 				parentEventTypeId: Record.SubHeader.ParentEventTypeId,
-				version: Version,
+				eventTypeVersion: Record.SubHeader.Version,
 				partitionId: Record.SubHeader.PartitionId);
 		}
 		

@@ -52,7 +52,7 @@ namespace EventStore.Core.LogAbstraction {
 				parentEventTypeId: Guid.Empty,
 				eventType: addedName,
 				eventTypeNumber: addedNumber,
-				version: 0,
+				eventTypeVersion: 0,
 				logPosition: logPosition,
 				timeStamp: DateTime.UtcNow);
 

@@ -183,7 +183,7 @@ namespace EventStore.LogV3 {
 			Guid parentEventTypeId,
 			Guid partitionId,
 			uint eventTypeNumber,
-			ushort version,
+			ushort eventTypeVersion,
 			string name) {
 
 			var payloadLength = _utf8NoBom.GetByteCount(name);
@@ -200,7 +200,7 @@ namespace EventStore.LogV3 {
 			subHeader.ParentEventTypeId = parentEventTypeId;
 			subHeader.PartitionId = partitionId;
 			subHeader.ReferenceNumber = eventTypeNumber;
-			subHeader.Version = version;
+			subHeader.Version = eventTypeVersion;
 			PopulateString(name, record.Payload.Span);
 
 			return StringPayloadRecord.Create(record);

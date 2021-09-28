@@ -22,7 +22,7 @@ namespace EventStore.Core.LogV2 {
 			Guid parentEventTypeId,
 			string eventType,
 			string referenceNumber,
-			byte version,
+			ushort version,
 			long logPosition,
 			DateTime timeStamp) =>
 			throw new NotSupportedException();

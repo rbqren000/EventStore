@@ -138,7 +138,7 @@ namespace EventStore.LogV3.Tests {
 				parentEventTypeId: _guid2,
 				partitionId: _guid3,
 				eventTypeNumber: _uint1,
-				version: _ushort1,
+				eventTypeVersion: _ushort1,
 				name: _string1);
 
 			Assert.Equal(LogRecordType.EventType, record.Header.Type);
