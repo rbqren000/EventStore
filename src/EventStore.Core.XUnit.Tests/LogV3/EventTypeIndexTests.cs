@@ -6,7 +6,6 @@ using EventStore.Core.LogV3;
 using EventStore.Core.LogV3.FASTER;
 using EventStore.Core.TransactionLog.LogRecords;
 using Xunit;
-using StreamTypeId = System.UInt32;
 
 namespace EventStore.Core.XUnit.Tests.LogV3
 {

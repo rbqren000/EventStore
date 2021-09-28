@@ -141,6 +141,17 @@ namespace EventStore.Core.XUnit.Tests.LogAbstraction {
 			Assert.Equal(expectedId, eventTypeId);
 			Assert.Equal(name, _sut.EventTypes.LookupName(expectedId));
 		}
+
+		[Fact]
+		public void uses_correct_event_type_interval() {
+			var expectedEventTypeNumber1 = LogV3SystemEventTypes.FirstRealEventTypeNumber + _numEventTypes;
+			Assert.False(GetOrReserveEventType("new-event-type-1", out var newEventTypeId1, out var createdId1, out var createdName1));
+			Assert.False(GetOrReserveEventType("new-event-type-2", out var newEventTypeId2, out var createdId2, out var createdName2));
+			Assert.Equal(expectedEventTypeNumber1, newEventTypeId1);
+			Assert.Equal(expectedEventTypeNumber1 + 1, newEventTypeId2);
+			Assert.True(_sut.EventTypes.TryGetName((uint)expectedEventTypeNumber1, out var eventType1));
+			Assert.True(_sut.EventTypes.TryGetName((uint)expectedEventTypeNumber1 + 1, out var eventType2));
+		}
 		
 		[Fact]
 		public void can_add_another_stream() {
