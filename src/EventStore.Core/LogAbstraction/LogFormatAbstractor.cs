@@ -288,7 +288,7 @@ namespace EventStore.Core.LogAbstraction {
 		public IRecordFactory<TStreamId> RecordFactory { get; }
 
 		public INameLookup<TStreamId> StreamNames => StreamNamesProvider.StreamNames;
-		public INameLookup<TStreamId> EventTypeNames => StreamNamesProvider.EventTypes;
+		public INameLookup<TStreamId> EventTypes => StreamNamesProvider.EventTypes;
 		public ISystemStreamLookup<TStreamId> SystemStreams => StreamNamesProvider.SystemStreams;
 		public INameExistenceFilterInitializer StreamExistenceFilterInitializer => StreamNamesProvider.StreamExistenceFilterInitializer;
 		public bool SupportsExplicitTransactions { get; }

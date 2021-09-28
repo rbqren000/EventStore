@@ -9,24 +9,27 @@ namespace EventStore.Core.LogV3
 		public const EventTypeId EventTypeInterval = 1;
 
 		public const EventTypeId EmptyEventTypeNumber = 0;
-		public const EventTypeId StreamDeletedNumber = 1;
-		public const EventTypeId StreamMetadataNumber = 2;
-		public const EventTypeId StreamCreatedNumber = 3;
-		public const EventTypeId EventTypeDefinedNumber = 4;
+		public const EventTypeId EventTypeDefinedNumber = 1;
+		public const EventTypeId StreamCreatedNumber = 2;
+		public const EventTypeId StreamMetadataNumber = 3;
+		public const EventTypeId StreamDeletedNumber = 4;
 		
 		public static bool TryGetSystemEventTypeId(string type, out EventTypeId eventTypeId) {
 			switch (type) {
 				case SystemEventTypes.EmptyEventType:
 					eventTypeId = EmptyEventTypeNumber;
 					return true;
-				case SystemEventTypes.StreamDeleted:
-					eventTypeId = StreamDeletedNumber;
+				case SystemEventTypes.EventTypeDefined:
+                	eventTypeId = EventTypeDefinedNumber;
+                	return true;
+				case SystemEventTypes.StreamCreated:
+					eventTypeId = StreamCreatedNumber;
 					return true;
 				case SystemEventTypes.StreamMetadata:
 					eventTypeId = StreamMetadataNumber;
 					return true;
-				case SystemEventTypes.EventTypeDefined:
-					eventTypeId = EventTypeDefinedNumber;
+				case SystemEventTypes.StreamDeleted:
+					eventTypeId = StreamDeletedNumber;
 					return true;
 				default:
 					eventTypeId = EmptyEventTypeNumber;
@@ -42,10 +45,10 @@ namespace EventStore.Core.LogV3
 
 			name = eventTypeId switch {
 				EmptyEventTypeNumber => SystemEventTypes.EmptyEventType,
-				StreamMetadataNumber => SystemEventTypes.StreamMetadata,
-				StreamCreatedNumber => SystemEventTypes.StreamCreated,
-				StreamDeletedNumber => SystemEventTypes.StreamDeleted,
 				EventTypeDefinedNumber => SystemEventTypes.EventTypeDefined,
+				StreamCreatedNumber => SystemEventTypes.StreamCreated,
+				StreamMetadataNumber => SystemEventTypes.StreamMetadata,
+				StreamDeletedNumber => SystemEventTypes.StreamDeleted,
 				_ => null,
 			};
 
