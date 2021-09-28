@@ -143,8 +143,6 @@ namespace EventStore.Core.LogV3 {
 						name: eventTypeRecord.EventTypeName,
 						value: eventTypeRecord.EventTypeNumber);
 
-					//qq do we need this?
-					//
 					// update the event types stream
 					// initialisation of the stream name index caused an entry to be populated in
 					// the last event number cache, now we need to keep it up to date even on initialisation

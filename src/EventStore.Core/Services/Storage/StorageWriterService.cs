@@ -287,7 +287,6 @@ namespace EventStore.Core.Services.Storage {
 
 				var prepares = new List<IPrepareLogRecord<TStreamId>>();
 				if (msg.Events.Length > 0) {
-					//qq consider using stackalloc
 					var eventTypes = new TStreamId[msg.Events.Length];
 					for (int i = 0; i < msg.Events.Length; ++i) {
 						var evnt = msg.Events[i];
