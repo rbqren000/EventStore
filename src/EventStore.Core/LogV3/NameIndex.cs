@@ -104,6 +104,11 @@ namespace EventStore.Core.LogV3 {
 			}
 		}
 
+		// todo: TC: could be sensible to take this code out of here altogether. that will save this
+		// class from having to know which _recordTypeToHandle, and save the indexcommitter from
+		// having to commit to two indexes (which will both look for what they need). instead the index commiter
+		// (perhaps using another class) can commit the right stuff to the right indexes itself.
+		//
 		// this is stream specific and will need to be generalised for eventtypes
 		// not terribly happy with the 'catchingUp' mechanism here because it couples
 		// the IndexCommitter behaviour to this method. but the intention is to remove
@@ -119,11 +124,13 @@ namespace EventStore.Core.LogV3 {
 
 					// update the streams stream
 					// initialisation of the stream name index caused an entry to be populated in
-					// the last event number cache, now we need to keep it up to date even on initialisation
+					// the last event number cache, because it read the last event number of the streams stream.
+					// now we need to keep it up to date even on initialisation or it will be wrong
 					backend.SetStreamLastEventNumber(prepare.EventStreamId, prepare.ExpectedVersion + 1);
 
 					if (catchingUp) {
-						// we are catching up, do not set the last event numbers because they will not be
+						// we are catching up, do not set the last event numbers of the stream we just
+						// created because they will not be
 						// updated during the catchup if we do write some events to those streams.
 						// therefore leave the entry blank so it will be (cheaply because in mem) be
 						// populated on miss.
@@ -144,8 +151,9 @@ namespace EventStore.Core.LogV3 {
 						value: eventTypeRecord.EventTypeNumber);
 
 					// update the event types stream
-					// initialisation of the stream name index caused an entry to be populated in
-					// the last event number cache, now we need to keep it up to date even on initialisation
+					// initialisation of the event types index caused an entry to be populated in
+					// the last event number cache, because it read the last event number of the event types stream.
+					// now we need to keep it up to date even on initialisation or it will be wrong
 					backend.SetStreamLastEventNumber(prepare.EventStreamId, prepare.ExpectedVersion + 1);
 				}
 			}

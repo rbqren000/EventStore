@@ -292,6 +292,7 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 					_backend.SetSystemSettings(DeserializeSystemSettings(prepares[prepares.Count - 1].Data));
 			}
 
+			// todo: refactor into one call
 			_streamNameIndex.Confirm(prepares, commit, _indexRebuild, _backend);
 			_eventTypeIndex.Confirm(prepares, commit, _indexRebuild, _backend);
 

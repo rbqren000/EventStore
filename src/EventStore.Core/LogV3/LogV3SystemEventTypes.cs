@@ -1,8 +1,7 @@
 ﻿using EventStore.Core.Services;
 using EventTypeId = System.UInt32;
 
-namespace EventStore.Core.LogV3
-{
+namespace EventStore.Core.LogV3 {
 	public class LogV3SystemEventTypes {
 
 		public const EventTypeId FirstRealEventTypeNumber = 1024;
@@ -13,15 +12,15 @@ namespace EventStore.Core.LogV3
 		public const EventTypeId StreamCreatedNumber = 2;
 		public const EventTypeId StreamMetadataNumber = 3;
 		public const EventTypeId StreamDeletedNumber = 4;
-		
+
 		public static bool TryGetSystemEventTypeId(string type, out EventTypeId eventTypeId) {
 			switch (type) {
 				case SystemEventTypes.EmptyEventType:
 					eventTypeId = EmptyEventTypeNumber;
 					return true;
 				case SystemEventTypes.EventTypeDefined:
-                	eventTypeId = EventTypeDefinedNumber;
-                	return true;
+					eventTypeId = EventTypeDefinedNumber;
+					return true;
 				case SystemEventTypes.StreamCreated:
 					eventTypeId = StreamCreatedNumber;
 					return true;
@@ -36,7 +35,7 @@ namespace EventStore.Core.LogV3
 					return false;
 			}
 		}
-		
+
 		public static bool TryGetVirtualEventType(EventTypeId eventTypeId, out string name) {
 			if (!IsVirtualEventType(eventTypeId)) {
 				name = null;
@@ -54,7 +53,7 @@ namespace EventStore.Core.LogV3
 
 			return name != null;
 		}
-		
+
 		private static bool IsVirtualEventType(EventTypeId eventTypeId) => eventTypeId < FirstRealEventTypeNumber;
 	}
 }

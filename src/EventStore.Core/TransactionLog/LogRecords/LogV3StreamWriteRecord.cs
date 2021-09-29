@@ -65,7 +65,6 @@ namespace EventStore.Core.TransactionLog.LogRecords {
 		public StreamId EventStreamId => Record.WriteId.StreamNumber;
 		public Guid EventId => Record.Event.SystemMetadata.EventId;
 		public Guid CorrelationId => Record.SystemMetadata.CorrelationId;
-		// temporarily storing the event type as the system metadata. later it will have a number.
 		public uint EventType => Record.Event.Header.EventTypeNumber;
 		public ReadOnlyMemory<byte> Data => Record.Event.Data;
 		public ReadOnlyMemory<byte> Metadata => Record.Event.Metadata;

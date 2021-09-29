@@ -287,7 +287,8 @@ namespace EventStore.Core.Services.Storage {
 
 				var prepares = new List<IPrepareLogRecord<TStreamId>>();
 				if (msg.Events.Length > 0) {
-					var eventTypes = new TStreamId[msg.Events.Length];
+					// get/write the eventtypes first because they go in a different stream
+					var eventTypes = new TStreamId[msg.Events.Length]; // todo: pool
 					for (int i = 0; i < msg.Events.Length; ++i) {
 						var evnt = msg.Events[i];
 						eventTypes[i] = GetOrWriteEventType(evnt.EventType, ref logPosition);
@@ -306,7 +307,6 @@ namespace EventStore.Core.Services.Storage {
 
 						// when IsCommitted ExpectedVersion is always explicit
 						var expectedVersion = commitCheck.CurrentVersion + i;
-						var eventType = GetOrWriteEventType(evnt.EventType, ref logPosition);
 						var res = WritePrepareWithRetry(
 							LogRecord.Prepare(_recordFactory, logPosition, msg.CorrelationId, evnt.EventId,
 								transactionPosition, i, streamId,
@@ -342,9 +342,8 @@ namespace EventStore.Core.Services.Storage {
 			}
 		}
 
-		private TStreamId GetOrWriteEventType(string eventType, ref long logPosition)
-		{
-			var preExistingEventType = _eventTypeIndex.GetOrReserveEventType(
+		private TStreamId GetOrWriteEventType(string eventType, ref long logPosition) {
+			_eventTypeIndex.GetOrReserveEventType(
 				recordFactory: _recordFactory,
 				eventType: eventType,
 				logPosition: logPosition,
@@ -359,7 +358,6 @@ namespace EventStore.Core.Services.Storage {
 			
 			return eventTypeId;
 		}
-
 
 		private void SoftUndeleteMetastream(TStreamId metastreamId) {
 			var origStreamId = _systemStreams.OriginalStreamOf(metastreamId);
@@ -505,6 +503,7 @@ namespace EventStore.Core.Services.Storage {
 					long lastLogPosition = -1;
 					for (int i = 0; i < message.Events.Length; ++i) {
 						var evnt = message.Events[i];
+						// safe, only v2 supports transactions and it doesnt write eventtype records.
 						var eventType = GetOrWriteEventType(evnt.EventType, ref logPosition);
 						var record = LogRecord.TransactionWrite(
 							_recordFactory,
