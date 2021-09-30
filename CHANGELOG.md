@@ -13,6 +13,13 @@ All notable changes to this project will be documented in this file.
 - off by one error and brackets in docs [EventStore#3135](https://github.com/EventStore/EventStore/pull/3135)
 - test adapter error when running all tests in visual studio [EventStore#3139](https://github.com/EventStore/EventStore/pull/3139)
 - potential race condition in BatchAppend [EventStore#3138](https://github.com/EventStore/EventStore/pull/3138)
+- Added verification checking if a message is of NotHandled type in PersistentSubscriptions Read message handling [EventStore#3158](https://github.com/EventStore/EventStore/pull/3158)
+- Issue with not handling null event data correctly  [EventStore#3171](https://github.com/EventStore/EventStore/pull/3171)
+- Incorrectly setting OutputState on IQuerySources when only a fold is defined [EventStore#3171](https://github.com/EventStore/EventStore/pull/3171)
+- Off-by-one error in Index committer service [EventStore#3186](https://github.com/EventStore/EventStore/pull/3186)
+- Node stays stuck in Leader state until next elections if a quorum never emerges [EventStore#3181](https://github.com/EventStore/EventStore/pull/3181)
+- user provided metadata to be formatted correctly [EventStore#3188](https://github.com/EventStore/EventStore/pull/3188)
+- Incorrect configuration file selection on linux [EventStore#3159](https://github.com/EventStore/EventStore/pull/3159)
 
 ### Cherry picked from https
 - //github.com/EventStore/EventStore/pull/2987 [EventStore#3010](https://github.com/EventStore/EventStore/pull/3010)
@@ -22,15 +29,26 @@ All notable changes to this project will be documented in this file.
 - //github.com/thefringeninja/EventStore/pull/3060 [EventStore#3067](https://github.com/EventStore/EventStore/pull/3067)
 - //github.com/EventStore/EventStore/pull/3119 [EventStore#3124](https://github.com/EventStore/EventStore/pull/3124)
 - //github.com/EventStore/EventStore/pull/3116 [EventStore#3118](https://github.com/EventStore/EventStore/pull/3118)
+- //github.com/EventStore/EventStore/pull/3166 [EventStore#3169](https://github.com/EventStore/EventStore/pull/3169)
 
 ### Added
 - GitHubActionsTestLogger to Buffer Management Tests [EventStore#3061](https://github.com/EventStore/EventStore/pull/3061)
 - Alpine Docker Image [EventStore#3069](https://github.com/EventStore/EventStore/pull/3069)
 - a bloom filter to quickly check stream existence [EventStore#3078](https://github.com/EventStore/EventStore/pull/3078)
 - LeaderElectionTimeoutMs option to allow configuring the timeout for election messages. [EventStore#3121](https://github.com/EventStore/EventStore/pull/3121)
+- `--blame-hang-timeout=5min` in case we have hanging builds. [EventStore#3017](https://github.com/EventStore/EventStore/pull/3017)
+- Improved error messages in case of task timeouts and test setup failures. [EventStore#3017](https://github.com/EventStore/EventStore/pull/3017)
+- More task timeouts to help prevent hanging build runs. [EventStore#3017](https://github.com/EventStore/EventStore/pull/3017)
+- Logging for help investigate flaky tests. [EventStore#3017](https://github.com/EventStore/EventStore/pull/3017)
+- Extra assertions to prevent unclear test failures. [EventStore#3017](https://github.com/EventStore/EventStore/pull/3017)
+- Retry of tests incase of failure triggered by flakiness. [EventStore#3017](https://github.com/EventStore/EventStore/pull/3017)
+- Checks to improve cluster stability before running tests. [EventStore#3017](https://github.com/EventStore/EventStore/pull/3017)
+- Add a log message describing how to disable the stream existence filter [EventStore#3172](https://github.com/EventStore/EventStore/pull/3172)
+- New options to control logging: --log-console-format, --log-file-size, --log-file-interval, --log-file-retention-count, and --disable-log-file [EventStore#3159](https://github.com/EventStore/EventStore/pull/3159)
 
 ### Changed
 - added a message to timeout error on append / delete [EventStore#3054](https://github.com/EventStore/EventStore/pull/3054)
+- Optimise some slow running tests [EventStore#3190](https://github.com/EventStore/EventStore/pull/3190)
 
 ### solution
 - correct the sample [EventStore#3127](https://github.com/EventStore/EventStore/pull/3127)
