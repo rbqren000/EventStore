@@ -104,12 +104,12 @@ namespace EventStore.Core.Tests.TransactionLog {
 			});
 		}
 
-		 [Test]
-		 public void throw_argumentnullexception_when_given_null_eventtype() {
-		 	Assert.DoesNotThrow(() =>
-		 		LogRecord.Prepare(_recordFactory, 0, Guid.NewGuid(), Guid.NewGuid(), 0, 0, _streamId, 0,
-		 			PrepareFlags.None, default, new byte[0], null, DateTime.UtcNow));
-		 }
+		[Test]
+		public void throw_argumentnullexception_when_given_null_eventtype() {
+			Assert.DoesNotThrow(() =>
+				LogRecord.Prepare(_recordFactory, 0, Guid.NewGuid(), Guid.NewGuid(), 0, 0, _streamId, 0,
+					PrepareFlags.None, default, new byte[0], null, DateTime.UtcNow));
+		}
 
 		[Test]
 		public void throw_argumentexception_when_given_empty_eventtype() {

@@ -7,24 +7,23 @@ using EventStore.Core.LogV3.FASTER;
 using EventStore.Core.TransactionLog.LogRecords;
 using Xunit;
 
-namespace EventStore.Core.XUnit.Tests.LogV3
-{
+namespace EventStore.Core.XUnit.Tests.LogV3 {
 	public class EventTypeIndexTests : IDisposable {
 		readonly string _outputDir = $"testoutput/{nameof(EventTypeIndexTests)}";
 		FASTERNameIndexPersistence _persistence;
 		NameIndex _sut;
-	
+
 		public EventTypeIndexTests() {
 			TryDeleteDirectory();
 			GenSut();
 		}
-	
+
 		void TryDeleteDirectory() {
 			try {
 				Directory.Delete(_outputDir, recursive: true);
 			} catch { }
 		}
-	
+
 		void GenSut() {
 			_sut?.CancelReservations();
 			_persistence?.Dispose();
@@ -37,7 +36,7 @@ namespace EventStore.Core.XUnit.Tests.LogV3
 				maxReaderCount: 1,
 				enableReadCache: true,
 				checkpointInterval: Timeout.InfiniteTimeSpan);
-	
+
 			_sut = new(
 				indexName: "EventTypeIndex",
 				firstValue: LogV3SystemEventTypes.FirstRealEventTypeNumber,

@@ -30,7 +30,7 @@ namespace EventStore.Core.XUnit.Tests.LogAbstraction {
 		readonly StreamId _streamId;
 		readonly StreamId _systemStreamId;
 		readonly string _eventType = "some-event";
-		private readonly EventTypeId _eventTypeId;
+		readonly EventTypeId _eventTypeId;
 		readonly MockIndexReader _mockIndexReader = new();
 		readonly int _numStreams;
 		readonly int _numEventTypes;
