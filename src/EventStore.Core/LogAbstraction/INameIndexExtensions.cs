@@ -41,7 +41,7 @@ namespace EventStore.Core.LogAbstraction {
 
 			var preExisting = eventTypeIndex.GetOrReserve(eventType, out eventTypeId, out var addedNumber, out var addedName);
 
-			var appendNewEventType = recordFactory.ExplicitStreamCreation && !preExisting;
+			var appendNewEventType = recordFactory.ExplicitEventTypeCreation && !preExisting;
 			if (!appendNewEventType) {
 				eventTypeRecord = null;
 				return preExisting;

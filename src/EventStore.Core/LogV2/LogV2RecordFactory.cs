@@ -8,6 +8,7 @@ namespace EventStore.Core.LogV2 {
 		}
 
 		public bool ExplicitStreamCreation => false;
+		public bool ExplicitEventTypeCreation => false;
 
 		public IPrepareLogRecord<string> CreateStreamRecord(
 			Guid streamId,
@@ -57,7 +58,7 @@ namespace EventStore.Core.LogV2 {
 				eventId: eventId,
 				transactionPosition: transactionPosition,
 				transactionOffset: transactionOffset,
-				eventStreamId: eventStreamId ?? string.Empty,
+				eventStreamId: eventStreamId,
 				expectedVersion: expectedVersion,
 				timeStamp: timeStamp,
 				flags: flags,
