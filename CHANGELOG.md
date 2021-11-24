@@ -17,6 +17,36 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Support for ARM64 on Linux. [EventStore#3076](https://github.com/EventStore/EventStore/pull/3076)
 
+## [20.10.5] - 
+
+### Fixed
+
+- Prevent nodes that aren't part of a cluster from pruning gossip seeds [EventStore#3116](https://github.com/EventStore/EventStore/pull/3116)
+- Overflow error in persistent subscriptions extra statistics [EventStore#3162](https://github.com/EventStore/EventStore/pull/3162)
+- Prevent the EpochManager from attempting to read epochs that should have been cached [EventStore#3189](https://github.com/EventStore/EventStore/pull/3189)
+- Off-by-one error in Index committer service [EventStore#3196](https://github.com/EventStore/EventStore/pull/3196)
+- Race condition where a node becomes leader and immediately writes to streams that have recently been written to but not[EventStore#3187](https://github.com/EventStore/EventStore/pull/3187)
+- Additional Options to Logging [EventStore#3207](https://github.com/EventStore/EventStore/pull/3207)
+- Object disposed exception in EventCountersHelper on shutdown [EventStore#3245](https://github.com/EventStore/EventStore/pull/3245)
+- Added verification checking if a message is of NotHandled type in PersistentSubscriptions Read message handling [EventStore#3158](https://github.com/EventStore/EventStore/pull/3158)
+- Breaking change in log file name by removing log rotation options [EventStore#3267](https://github.com/EventStore/EventStore/pull/3267)
+- Exception in scheduled message callback crashes server [EventStore#3272](https://github.com/EventStore/EventStore/pull/3272)
+- IODispatcher is now threadsafe for request tracking [EventStore#3272](https://github.com/EventStore/EventStore/pull/3272)
+- Clear HeadingEventReader cache when stopping the readers [EventStore#3233](https://github.com/EventStore/EventStore/pull/3233)
+- InvalidOperationException caused by reading RequestStream after completing the PersistentSubscription gRPC call [EventStore#3294](https://github.com/EventStore/EventStore/pull/3294)
+- 404 error for scavenge no longer shows in UI [EventStore#3284](https://github.com/EventStore/EventStore/pull/3284)
+- Replica stats show in the UI [EventStore#3284](https://github.com/EventStore/EventStore/pull/3284)
+
+### Changed
+- Check /etc/eventstore First for Custom Configuration [EventStore#3207](https://github.com/EventStore/EventStore/pull/3207)
+- Warn that projection debugging uses a different engine to the one running in Event Store [EventStore#3284](https://github.com/EventStore/EventStore/pull/3284)
+- Do not download intermediate certificates from AIA URLs [EventStore#3283](https://github.com/EventStore/EventStore/pull/3283)
+
+### Added
+- LeaderElectionTimeoutMs option to allow configuring the timeout for election messages. [EventStore#3263](https://github.com/EventStore/EventStore/pull/3263)
+- Support for Intermediate CA certificates [EventStore#3283](https://github.com/EventStore/EventStore/pull/3283)
+- Validation of certificate chain with node's own certificate on start up [EventStore#3283](https://github.com/EventStore/EventStore/pull/3283)
+
 ## [21.10.0] - 2021-11-03
 
 ### Fixed
