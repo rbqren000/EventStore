@@ -380,11 +380,6 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 						return prepare;
 				}
 
-				for (int i = entries.Count - 1; i >= 0; i--) {
-					var prepare = ReadPrepareInternal(tfReaderLease, entries[i].Position);
-					if (prepare != null) return prepare;
-				}
-
 				return null;
 			}
 
@@ -396,11 +391,6 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 					var prepare = ReadPrepareInternal(tfReaderLease, entries[i].Position);
 					if (prepare != null && prepare.EventStreamId == streamId)
 						return prepare;
-				}
-
-				for (int i = 0; i < entries.Count; i++) {
-					var prepare = ReadPrepareInternal(tfReaderLease, entries[i].Position);
-					if (prepare != null) return prepare;
 				}
 
 				return null;
