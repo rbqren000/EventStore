@@ -29,7 +29,16 @@ namespace EventStore.Core.Tests.Services.Storage.MaxAgeMaxCount.ReadRangeAndNext
 			var res = ReadIndex.ReadStreamEventsForward("ES", 1, 10);
 			var elapsed = sw.Elapsed;
 			Assert.Less(elapsed, TimeSpan.FromSeconds(1));
-			Assert.AreEqual(9, res.Records.Length);
+
+			Assert.AreEqual(1_000_000, res.NextEventNumber);
+			Assert.AreEqual(0, res.Records.Length);
+			Assert.AreEqual(false, res.IsEndOfStream);
+
+			res = ReadIndex.ReadStreamEventsForward("ES", res.NextEventNumber, 10);
+
+			Assert.AreEqual(1_000_010, res.NextEventNumber);
+			Assert.AreEqual(10, res.Records.Length);
+			Assert.AreEqual(true, res.IsEndOfStream);
 		}
 	}
 }

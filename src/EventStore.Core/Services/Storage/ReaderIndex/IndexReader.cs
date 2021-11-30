@@ -261,7 +261,7 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 				if (tableIndex.TryGetOldestEntry(streamId, out var oldest)) {
 					startEventNumber = oldest.Version;
 					endEventNumber = startEventNumber + maxCount - 1;
-					indexEntries = tableIndex.GetRange(streamId, startEventNumber, endEventNumber, maxCount);
+					indexEntries = tableIndex.GetRange(streamId, startEventNumber, endEventNumber);
 				} else {
 					//scavenge completed and deleted our stream? return empty set and get the client to try again?
 					return new IndexReadStreamResult(fromEventNumber, maxCount, IndexReadStreamResult.EmptyRecords,
@@ -314,7 +314,7 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 			var high = latest.Version;
 			while (low <= high) {
 				var mid = low + ((high - low) / 2);
-				indexEntries = tableIndex.GetRange(streamId, mid, mid + maxCount, maxCount);
+				indexEntries = tableIndex.GetRange(streamId, mid, mid + maxCount);
 				if (indexEntries.Count > 0) {
 					nextEventNumber = indexEntries[0].Version + 1;
 				}
