@@ -241,7 +241,7 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 			}
 		}
 
-		static IndexReadStreamResult ForStreamWithMaxAge(string streamId,
+		private IndexReadStreamResult ForStreamWithMaxAge(string streamId,
 			long fromEventNumber, int maxCount, long startEventNumber,
 			long endEventNumber, long lastEventNumber, TimeSpan maxAge, StreamMetadata metadata,
 			ITableIndex tableIndex, TFReaderLease reader, bool skipIndexScanOnRead) {
@@ -295,23 +295,19 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 			}
 
 			//we didn't find anything valid yet, now we need to search
+			//the entries we found were all either scavenged, or expired, or for another stream.
 
-			//check high value will be valid
-			if (tableIndex.TryGetLatestEntry(streamId, out var latest)) {
-				var end = ReadPrepareInternal(reader, latest.Position);
-				if (end.TimeStamp < ageThreshold || latest.Version < fromEventNumber) {
-					//No events in the stream are < max age, so return an empty set
-					return new IndexReadStreamResult(fromEventNumber, maxCount, IndexReadStreamResult.EmptyRecords,
-						metadata, latest.Version + 1, latest.Version, isEndOfStream: true);
-				}
-			} else {
-				//For some reason there is no last event in this stream, maybe a scavenge completed and deleted the stream, send back for retry
+			//check high value will be valid, otherwise early return.
+			// this resolves hash collisions itself
+			var lastEvent = ReadPrepareInternal(reader, streamId, eventNumber: lastEventNumber);
+			if (lastEvent == null || lastEvent.TimeStamp < ageThreshold || lastEventNumber < fromEventNumber) {
+				//No events in the stream are < max age, so return an empty set
 				return new IndexReadStreamResult(fromEventNumber, maxCount, IndexReadStreamResult.EmptyRecords,
-					metadata, lastEventNumber + 1, lastEventNumber, isEndOfStream: false);
+					metadata, lastEventNumber + 1, lastEventNumber, isEndOfStream: true);
 			}
 
 			var low = indexEntries[0].Version;
-			var high = latest.Version;
+			var high = lastEventNumber;
 			while (low <= high) {
 				var mid = low + ((high - low) / 2);
 				indexEntries = tableIndex.GetRange(streamId, mid, mid + maxCount);
