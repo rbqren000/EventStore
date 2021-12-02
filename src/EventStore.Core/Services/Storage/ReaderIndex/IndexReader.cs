@@ -306,6 +306,13 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 					metadata, lastEventNumber + 1, lastEventNumber, isEndOfStream: true);
 			}
 
+			// intuition for loop termination here is that the two explicit continue cases are
+			// the only way to continue the iteration. apart from those it return;s or break;s.
+			// the two continue cases always narrow the gap between low and high
+			//
+			// low, mid, and high are event numbers (versions)
+			// attempt to initialize low to the latest (highest) entry that we found but in the unlikely event that
+			// they're out of version order thats still ok, low will just be lower than it could have been.
 			var low = indexEntries[0].Version;
 			var high = lastEventNumber;
 			while (low <= high) {
@@ -325,11 +332,13 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 
 				var (highPrepareVersion, highPrepare) = HighPrepare(reader, indexEntries, streamId);
 				if (highPrepare?.TimeStamp < ageThreshold) {
-					low = mid + indexEntries.Count;
+					low = highPrepareVersion + 1;
 					continue;
 				}
 
 				//ok, some entries must match, if not (due to time moving forwards) we can just reissue based on the current mid
+				// also might have no matches because the getrange call returned addresses that
+				// were all scavenged or for other streams.
 				for (int i = 0; i < indexEntries.Count; i++) {
 					var prepare = ReadPrepareInternal(reader, indexEntries[i].Position);
 
