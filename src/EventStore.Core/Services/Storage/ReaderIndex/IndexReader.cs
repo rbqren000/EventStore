@@ -310,7 +310,7 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 			var high = lastEventNumber;
 			while (low <= high) {
 				var mid = low + ((high - low) / 2);
-				indexEntries = tableIndex.GetRange(streamId, mid, mid + maxCount);
+				indexEntries = tableIndex.GetRange(streamId, mid, mid + maxCount - 1);
 				if (indexEntries.Count > 0) {
 					nextEventNumber = indexEntries[0].Version + 1;
 				}
@@ -350,7 +350,7 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 					results.Reverse();
 					var isEndOfStream = endEventNumber >= lastEventNumber;
 
-					var maxEventNumberToReturn = fromEventNumber + maxCount;
+					var maxEventNumberToReturn = fromEventNumber + maxCount - 1;
 					while (results.Count > 0 && results[^1].EventNumber > maxEventNumberToReturn) {
 						nextEventNumber = results[^1].EventNumber;
 						results.Remove(results[^1]);
