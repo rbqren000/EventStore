@@ -315,14 +315,15 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 					nextEventNumber = indexEntries[0].Version + 1;
 				}
 
-				var lowPrepare = LowPrepare(reader, indexEntries, streamId);
+				// be really careful if adjusting these, to make sure that the loop still terminates
+				var (lowPrepareVersion, lowPrepare) = LowPrepare(reader, indexEntries, streamId);
 				if (lowPrepare?.TimeStamp >= ageThreshold) {
 					high = mid - 1;
-					nextEventNumber = lowPrepare.ExpectedVersion + 1;
+					nextEventNumber = lowPrepareVersion;
 					continue;
 				}
 
-				var highPrepare = HighPrepare(reader, indexEntries, streamId);
+				var (highPrepareVersion, highPrepare) = HighPrepare(reader, indexEntries, streamId);
 				if (highPrepare?.TimeStamp < ageThreshold) {
 					low = mid + indexEntries.Count;
 					continue;
@@ -366,30 +367,35 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 			//We didn't find anything, send back to the client with the latest position to retry
 			return new IndexReadStreamResult(fromEventNumber, maxCount, IndexReadStreamResult.EmptyRecords,
 				metadata, nextEventNumber, lastEventNumber, isEndOfStream: false);
+
 			[MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-			static PrepareLogRecord LowPrepare(TFReaderLease tfReaderLease,
-				IReadOnlyList<IndexEntry> entries, string streamId) {
+			static (long, PrepareLogRecord) LowPrepare(
+				TFReaderLease tfReaderLease,
+				IReadOnlyList<IndexEntry> entries,
+				string streamId) {
 
 				for (int i = entries.Count - 1; i >= 0; i--) {
 					var prepare = ReadPrepareInternal(tfReaderLease, entries[i].Position);
 					if (prepare != null && prepare.EventStreamId == streamId)
-						return prepare;
+						return (entries[i].Version, prepare);
 				}
 
-				return null;
+				return (default, null);
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-			static PrepareLogRecord HighPrepare(TFReaderLease tfReaderLease,
-				IReadOnlyList<IndexEntry> entries, string streamId) {
+			static (long, PrepareLogRecord) HighPrepare(
+				TFReaderLease tfReaderLease,
+				IReadOnlyList<IndexEntry> entries,
+				string streamId) {
 
 				for (int i = 0; i < entries.Count; i++) {
 					var prepare = ReadPrepareInternal(tfReaderLease, entries[i].Position);
 					if (prepare != null && prepare.EventStreamId == streamId)
-						return prepare;
+						return (entries[i].Version, prepare);
 				}
 
-				return null;
+				return (default, null);
 			}
 		}
 
