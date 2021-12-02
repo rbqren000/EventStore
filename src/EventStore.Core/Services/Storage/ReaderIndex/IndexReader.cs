@@ -376,7 +376,7 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 
 				for (int i = entries.Count - 1; i >= 0; i--) {
 					var prepare = ReadPrepareInternal(tfReaderLease, entries[i].Position);
-					if (prepare != null && prepare.EventStreamId != streamId)
+					if (prepare != null && prepare.EventStreamId == streamId)
 						return prepare;
 				}
 
@@ -394,7 +394,7 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 
 				for (int i = 0; i < entries.Count; i++) {
 					var prepare = ReadPrepareInternal(tfReaderLease, entries[i].Position);
-					if (prepare != null && prepare.EventStreamId != streamId)
+					if (prepare != null && prepare.EventStreamId == streamId)
 						return prepare;
 				}
 
