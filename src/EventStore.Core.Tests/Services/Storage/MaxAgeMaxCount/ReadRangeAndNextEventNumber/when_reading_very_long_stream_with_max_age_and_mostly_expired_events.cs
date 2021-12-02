@@ -18,7 +18,7 @@ namespace EventStore.Core.Tests.Services.Storage.MaxAgeMaxCount.ReadRangeAndNext
 				WriteSingleEvent("ES", i, "bla", now.AddMinutes(-50), retryOnFail: true);
 			}
 
-			for (int i = 1_000_000; i < 1_000_010; i++) {
+			for (int i = 1_000_000; i < 1_000_015; i++) {
 				WriteSingleEvent("ES", i, "bla", now.AddMinutes(-1), retryOnFail: true);
 			}
 		}
@@ -28,7 +28,6 @@ namespace EventStore.Core.Tests.Services.Storage.MaxAgeMaxCount.ReadRangeAndNext
 			Stopwatch sw = Stopwatch.StartNew();
 			var res = ReadIndex.ReadStreamEventsForward("ES", 1, 10);
 			var elapsed = sw.Elapsed;
-			Assert.Less(elapsed, TimeSpan.FromSeconds(1));
 
 			Assert.AreEqual(1_000_000, res.NextEventNumber);
 			Assert.AreEqual(0, res.Records.Length);
@@ -38,7 +37,15 @@ namespace EventStore.Core.Tests.Services.Storage.MaxAgeMaxCount.ReadRangeAndNext
 
 			Assert.AreEqual(1_000_010, res.NextEventNumber);
 			Assert.AreEqual(10, res.Records.Length);
+			Assert.AreEqual(false, res.IsEndOfStream);
+
+			res = ReadIndex.ReadStreamEventsForward("ES", res.NextEventNumber, 10);
+
+			Assert.AreEqual(1_000_015, res.NextEventNumber);
+			Assert.AreEqual(5, res.Records.Length);
 			Assert.AreEqual(true, res.IsEndOfStream);
+
+			Assert.Less(elapsed, TimeSpan.FromSeconds(1));
 		}
 	}
 }

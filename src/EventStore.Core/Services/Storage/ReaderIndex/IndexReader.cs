@@ -354,9 +354,9 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 					while (results.Count > 0 && results[^1].EventNumber > maxEventNumberToReturn) {
 						nextEventNumber = results[^1].EventNumber;
 						results.Remove(results[^1]);
+						isEndOfStream = false;
 					}
 
-					if (results.Count == 0) nextEventNumber--;
 					return new IndexReadStreamResult(endEventNumber, maxCount, results.ToArray(), metadata,
 						nextEventNumber, lastEventNumber, isEndOfStream);
 				}
