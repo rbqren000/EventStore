@@ -269,7 +269,7 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 				}
 			}
 
-			var results = new List<EventRecord>();
+			var results = new ResultsDeduplicator(maxCount, skipIndexScanOnRead);
 			for (int i = 0; i < indexEntries.Count; i++) {
 				var prepare = ReadPrepareInternal(reader, indexEntries[i].Position);
 
@@ -286,11 +286,12 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 
 			if (results.Count > 0) {
 				//We got at least one event in the correct age range, so we will return whatever was valid and indicate where to read from next
-				nextEventNumber = results[0].EventNumber + 1;
-				results.Reverse();
+				var resultsArray = results.ProduceArray();
+				nextEventNumber = resultsArray[0].EventNumber + 1;
+				Array.Reverse(resultsArray);
 
 				var isEndOfStream = endEventNumber >= lastEventNumber;
-				return new IndexReadStreamResult(endEventNumber, maxCount, results.ToArray(), metadata,
+				return new IndexReadStreamResult(endEventNumber, maxCount, resultsArray, metadata,
 					nextEventNumber, lastEventNumber, isEndOfStream);
 			}
 
@@ -354,19 +355,20 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 
 				if (results.Count > 0) {
 					//We got at least one event in the correct age range, so we will return whatever was valid and indicate where to read from next
-					endEventNumber = results[0].EventNumber;
+					var resultsList = results.ProduceList();
+					endEventNumber = resultsList[0].EventNumber;
 					nextEventNumber = endEventNumber + 1;
-					results.Reverse();
+					resultsList.Reverse();
 					var isEndOfStream = endEventNumber >= lastEventNumber;
 
 					var maxEventNumberToReturn = fromEventNumber + maxCount - 1;
-					while (results.Count > 0 && results[^1].EventNumber > maxEventNumberToReturn) {
-						nextEventNumber = results[^1].EventNumber;
-						results.Remove(results[^1]);
+					while (resultsList.Count > 0 && resultsList[^1].EventNumber > maxEventNumberToReturn) {
+						nextEventNumber = resultsList[^1].EventNumber;
+						resultsList.RemoveAt(resultsList.Count - 1);
 						isEndOfStream = false;
 					}
 
-					return new IndexReadStreamResult(endEventNumber, maxCount, results.ToArray(), metadata,
+					return new IndexReadStreamResult(endEventNumber, maxCount, resultsList.ToArray(), metadata,
 						nextEventNumber, lastEventNumber, isEndOfStream);
 				}
 
@@ -643,6 +645,79 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 				return metadata;
 			} catch (Exception) {
 				return StreamMetadata.Empty;
+			}
+		}
+
+		// This struct implements the IndexScanOnRead logic.
+		//
+		// The IndexScanOnRead logic deals with the case that there are duplicate
+		// EventNumbers for a single stream (note: not talking about hash collisions), which
+		// may also be out of order (possible when there are a mix of index table bitnesses)
+		//
+		// It deals with them by removing duplicates as they are added (preferring the record
+		// with the lower LogPosition) and then sorting by EventNumber (descending) on output.
+		//
+		// If SkipIndexScanOnRead is true, then it is assumed that the EventRecords are added
+		// (1) in EventNumber order descending and (2) without duplicate EventNumbers.
+		public readonly struct ResultsDeduplicator {
+			// when deduplicating, maps event number to index in _results
+			private readonly Dictionary<long, int> _dict;
+			private readonly List<EventRecord> _results;
+			private readonly bool _skipIndexScanOnRead;
+			private static readonly Comparison<EventRecord> _byEventNumberDesc = CompareByEventNumberDesc;
+
+			public ResultsDeduplicator(int maxCount, bool skipIndexScanOnRead) {
+				var capacity = Math.Min(maxCount, 256);
+				_dict = skipIndexScanOnRead
+					? null
+					: new Dictionary<long, int>(capacity);
+				_results = new List<EventRecord>(capacity);
+				_skipIndexScanOnRead = skipIndexScanOnRead;
+			}
+
+			public int Count => _results.Count;
+
+			public EventRecord[] ProduceArray() {
+				var array = _results.ToArray();
+
+				if (!_skipIndexScanOnRead) {
+					// we already deduplicated on the way in, just sort here
+					Array.Sort(array, _byEventNumberDesc);
+				}
+
+				return array;
+			}
+
+			public List<EventRecord> ProduceList() {
+				var list = _results.ToList();
+
+				if (!_skipIndexScanOnRead) {
+					list.Sort(_byEventNumberDesc);
+				}
+
+				return list;
+			}
+
+			public void Add(EventRecord evt) {
+				if (_skipIndexScanOnRead) {
+					_results.Add(evt);
+					return;
+				}
+
+				if (_dict.TryGetValue(evt.EventNumber, out var i)) {
+					if (_results[i].LogPosition > evt.LogPosition) {
+						_results[i] = evt;
+					} else {
+						// ignore
+					}
+				} else {
+					_results.Add(evt);
+					_dict[evt.EventNumber] = _results.Count - 1;
+				}
+			}
+
+			private static int CompareByEventNumberDesc(EventRecord x, EventRecord y) {
+				return y.EventNumber.CompareTo(x.EventNumber);
 			}
 		}
 	}

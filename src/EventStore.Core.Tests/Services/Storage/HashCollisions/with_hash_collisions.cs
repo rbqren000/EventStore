@@ -150,15 +150,27 @@ namespace EventStore.Core.Tests.Services.Storage.HashCollisions {
 		}
 	}
 
-	[TestFixture]
+	[TestFixture(true)]
+	[TestFixture(false)]
 	public class when_index_contains_duplicate_entries : HashCollisionTestFixture {
 		private string streamId = "account--696193173";
+		private readonly bool _withMaxAge;
+
+		public when_index_contains_duplicate_entries(bool withMaxAge) {
+			_withMaxAge = withMaxAge;
+		}
 
 		protected override void given() {
 			_hashCollisionReadLimit = 5;
 		}
 
 		protected override void when() {
+			if (_withMaxAge) {
+				_indexBackend.SetStreamMetadata(
+					streamId,
+					new Data.StreamMetadata(maxAge: TimeSpan.FromDays(1)));
+			}
+
 			//ptable 1
 			_tableIndex.Add(1, streamId, 0, 2);
 			_tableIndex.Add(1, streamId, 0, 4);
