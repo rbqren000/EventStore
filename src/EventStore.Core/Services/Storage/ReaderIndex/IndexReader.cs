@@ -245,6 +245,7 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 			long fromEventNumber, int maxCount, long startEventNumber,
 			long endEventNumber, long lastEventNumber, TimeSpan maxAge, StreamMetadata metadata,
 			ITableIndex tableIndex, TFReaderLease reader, bool skipIndexScanOnRead) {
+
 			if (startEventNumber > lastEventNumber) {
 				return new IndexReadStreamResult(fromEventNumber, maxCount, IndexReadStreamResult.EmptyRecords,
 					metadata, lastEventNumber + 1, lastEventNumber, isEndOfStream: true);
@@ -257,6 +258,8 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 			//Move to the first valid entries. At this point we could instead return an empty result set with the minimum set, but that would 
 			//involve an additional set of reads for no good reason
 			while (indexEntries.Count == 0) {
+				// we didn't find any indexEntries, and we already early returned in the case that startEventNumber > lastEventNumber
+				// so we must be reading before the oldest entry for this stream hash.
 				// this will generally only iterate once, unless a scavenge completes exactly now, in which case it might iterate twice
 				if (tableIndex.TryGetOldestEntry(streamId, out var oldest)) {
 					startEventNumber = oldest.Version;
@@ -326,6 +329,7 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 				// be really careful if adjusting these, to make sure that the loop still terminates
 				var (lowPrepareVersion, lowPrepare) = LowPrepare(reader, indexEntries, streamId);
 				if (lowPrepare?.TimeStamp >= ageThreshold) {
+					// found a lowPrepare for this stream. it has not expired. chop lower in case there are more
 					high = mid - 1;
 					nextEventNumber = lowPrepareVersion;
 					continue;
@@ -333,13 +337,14 @@ namespace EventStore.Core.Services.Storage.ReaderIndex {
 
 				var (highPrepareVersion, highPrepare) = HighPrepare(reader, indexEntries, streamId);
 				if (highPrepare?.TimeStamp < ageThreshold) {
+					// found a highPrepare for this stream. it has expired. chop higher
 					low = highPrepareVersion + 1;
 					continue;
 				}
 
 				//ok, some entries must match, if not (due to time moving forwards) we can just reissue based on the current mid
 				// also might have no matches because the getrange call returned addresses that
-				// were all scavenged or for other streams.
+				// were all scavenged or for other streams, in which case we won't add anything to results here
 				for (int i = 0; i < indexEntries.Count; i++) {
 					var prepare = ReadPrepareInternal(reader, indexEntries[i].Position);
 
